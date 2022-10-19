@@ -1,11 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "./User";
+import { User } from "../utils/types";
 import users from "./users";
 
 @Injectable()
 export class UsersService {
   getUsers(): User[] {
-    console.log(users);
     return users;
   }
 
@@ -15,30 +14,52 @@ export class UsersService {
     return "User not found";
   }
 
-  getUserByName(firstName?: string, lastName?: string): User | string {
-    const user = users.find((user) => {
-      if (lastName && firstName) {
-        if (
-          user.name.toLowerCase() == firstName.toLowerCase() &&
-          user.lastName.toLowerCase() == lastName.toLowerCase()
-        ) {
-          return user;
-        } else {
-          console.log(firstName, lastName);
-          return undefined;
+  getUserByName(
+    name?: string,
+    lastName?: string,
+    allUsers?: boolean
+  ): User | User[] | string {
+    if (!allUsers) {
+      const user = users.find((user) => {
+        if (lastName && name) {
+          if (
+            user.name.toLowerCase() == name.toLowerCase() &&
+            user.lastName.toLowerCase() == lastName.toLowerCase()
+          ) {
+            return user;
+          } else {
+            return undefined;
+          }
         }
-      }
-      if (firstName && user.name.toLowerCase() == firstName.toLowerCase()) {
+        if (name && user.name.toLowerCase() == name.toLowerCase()) {
+          return user;
+        }
+        if (lastName && user.lastName.toLowerCase() == lastName.toLowerCase()) {
+          return user;
+        }
+      });
+
+      if (user) return user;
+
+      return "User not found";
+    }
+    const usersEquals = users.filter((user) => {
+      if (
+        name &&
+        lastName &&
+        name.toLowerCase() == user.name.toLowerCase() &&
+        lastName.toLowerCase() == user.lastName.toLocaleLowerCase()
+      ) {
         return user;
       }
-      if (lastName && user.lastName.toLowerCase() == lastName.toLowerCase()) {
+      if (name && name.toLowerCase() == user.name.toLowerCase()) {
+        return user;
+      }
+      if (lastName && lastName.toLowerCase() == user.lastName.toLowerCase()) {
         return user;
       }
     });
-
-    if (user) return user;
-
-    return "User not found";
+    return usersEquals;
   }
 
   getUserByAge(max?: number, min?: number): User[] {

@@ -5,7 +5,11 @@ export interface User {
   age?: number;
 }
 
-export interface MaxAndMinAge {
+export interface TypeQuery {
+  allUsers?: boolean;
+  name?: string;
+  lastName?: string;
+  age?: number;
   max?: number;
   min?: number;
 }

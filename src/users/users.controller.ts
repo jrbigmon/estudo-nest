@@ -1,6 +1,6 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
 import { UsersService } from "./users.service";
-import { User, MaxAndMinAge } from "./User";
+import { User, TypeQuery } from "../utils/types";
 
 @Controller("users")
 export class UsersController {
@@ -12,12 +12,16 @@ export class UsersController {
   }
 
   @Get("searchByName")
-  getUserByName(@Query() query: User): User | string {
-    return this.usersService.getUserByName(query.name, query.lastName);
+  getUserByName(@Query() query: TypeQuery): User | User[] | string {
+    return this.usersService.getUserByName(
+      query.name,
+      query.lastName,
+      query.allUsers
+    );
   }
 
   @Get("age")
-  getUserByAge(@Query() query: MaxAndMinAge): User[] | string {
+  getUserByAge(@Query() query: TypeQuery): User[] | string {
     return this.usersService.getUserByAge(query.max, query.min);
   }
 

@@ -1,4 +1,4 @@
-import { User } from "./User";
+import { User } from "../utils/types";
 
 function createNewUser(
   id: number,
